@@ -1,0 +1,27 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    environment:
+      DOMAIN: "https://your_domain:port"
+    volumes:
+      - ./vw-data:/data
+    networks:
+      - internal
+
+  nginx:
+    image: nginx:alpine
+    container_name: vaultwarden-nginx
+    restart: unless-stopped
+    ports:
+      - "445:443"
+      - '83:80'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/ssl:/ssl:ro
+    networks:
+      - internal
+
+networks:
+  internal:
